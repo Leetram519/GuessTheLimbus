@@ -1,0 +1,323 @@
+<div class="app-container">
+  <header class="game-header">
+    <h1>GUESS THE LIMBUS ID</h1>
+    <p class="subtitle">A Project Moon Daily Challenge</p>
+  </header>
+
+  <section class="playfield">
+    @for (guess of guesses(); track $index) {
+      <div class="guess-row" [class.active]="$index === currentGuess()">
+        @if (!guess) {
+          <div class="guess-slot">
+            <span class="slot-number">{{ $index + 1 }}</span>
+          </div>
+        } @else {
+          <div class="guessed-id-full">
+            <div class="guess-header">
+              <div class="id-portrait-container">
+                <img [src]="guess.id.imagePath" [alt]="guess.id.name" class="id-portrait" />
+              </div>
+              <div class="id-info">
+                <h3>{{ guess.id.name }}</h3>
+                <span class="guess-number">Guess #{{ $index + 1 }}</span>
+              </div>
+              <span class="result-indicator" [class]="guess.isCorrect ? 'correct' : 'wrong'">
+                {{ guess.isCorrect ? '✓ CORRECT' : '✗ WRONG' }}
+              </span>
+            </div>
+            
+            @if (!guess.isCorrect) {
+              <div class="guess-content">
+                <!-- Quick Preview Summary -->
+                <div class="quick-preview">
+                  <div class="preview-title">Quick Summary</div>
+                  <div class="preview-items">
+                    <div class="preview-item" [class.match]="guess.comparison.sinner === 'YES'">
+                      <span class="preview-icon">{{ guess.comparison.sinner === 'YES' ? '✓' : '✗' }}</span>
+                      <span class="preview-label">Sinner</span>
+                    </div>
+                    <div class="preview-item" [class.match]="guess.comparison.rarity === 'YES'">
+                      <span class="preview-icon">{{ guess.comparison.rarity === 'YES' ? '✓' : '✗' }}</span>
+                      <span class="preview-label">Rarity</span>
+                    </div>
+                    <div class="preview-item" [class.match]="guess.comparison.season === 'YES'">
+                      <span class="preview-icon">{{ guess.comparison.season === 'YES' ? '✓' : '✗' }}</span>
+                      <span class="preview-label">Season</span>
+                    </div>
+                    <div class="preview-item" [class.match]="guess.comparison.passiveCount === 'YES'" [class.partial]="guess.comparison.passiveCount !== 'YES'">
+                      <span class="preview-icon">
+                        @if (guess.comparison.passiveCount === 'YES') {
+                          ✓
+                        } @else if (guess.comparison.passiveCount === 'LESS') {
+                          ↓
+                        } @else {
+                          ↑
+                        }
+                      </span>
+                      <span class="preview-label">Passives</span>
+                    </div>
+                    <div class="preview-item" 
+                         [class.match]="areAllKeywordsMatched(guess.comparison.preciseKeywords)"
+                         [class.partial]="areSomeKeywordsMatched(guess.comparison.preciseKeywords) && !areAllKeywordsMatched(guess.comparison.preciseKeywords)">
+                      <span class="preview-icon">
+                        @if (areAllKeywordsMatched(guess.comparison.preciseKeywords)) {
+                          ✓
+                        } @else if (areSomeKeywordsMatched(guess.comparison.preciseKeywords)) {
+                          ~
+                        } @else {
+                          ✗
+                        }
+                      </span>
+                      <span class="preview-label">Precise KW</span>
+                    </div>
+                    <div class="preview-item" 
+                         [class.match]="areAllKeywordsMatched(guess.comparison.statusKeywords)"
+                         [class.partial]="areSomeKeywordsMatched(guess.comparison.statusKeywords) && !areAllKeywordsMatched(guess.comparison.statusKeywords)">
+                      <span class="preview-icon">
+                        @if (areAllKeywordsMatched(guess.comparison.statusKeywords)) {
+                          ✓
+                        } @else if (areSomeKeywordsMatched(guess.comparison.statusKeywords)) {
+                          ~
+                        } @else {
+                          ✗
+                        }
+                      </span>
+                      <span class="preview-label">Status KW</span>
+                    </div>
+                    @for (skill of guess.comparison.skills; track skill.skillNumber) {
+                      <div class="preview-item" 
+                           [class.match]="isSkillFullyMatched(skill)"
+                           [class.partial]="isSkillPartiallyMatched(skill)">
+                        <span class="preview-icon">
+                          @if (skill.exists === 'NO') {
+                            ✗
+                          } @else if (isSkillFullyMatched(skill)) {
+                            ✓
+                          } @else if (isSkillPartiallyMatched(skill)) {
+                            ~
+                          } @else {
+                            ✗
+                          }
+                        </span>
+                        <span class="preview-label">Skill {{ skill.skillNumber }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Detailed Comparison -->
+                <div class="comparison-grid">
+                <div class="comparison-item" [class.match]="guess.comparison.sinner === 'YES'">
+                  <div class="comparison-label">Sinner</div>
+                  <div class="comparison-value">{{ guess.id.sinner }}</div>
+                  <div class="comparison-status">{{ guess.comparison.sinner }}</div>
+                </div>
+
+                <div class="comparison-item" [class.match]="guess.comparison.rarity === 'YES'">
+                  <div class="comparison-label">Rarity</div>
+                  <div class="comparison-value">{{ guess.id.rarity === 0 ? '0' : guess.id.rarity === 1 ? '00' : '000' }}</div>
+                  <div class="comparison-status">{{ guess.comparison.rarity }}</div>
+                </div>
+
+                <div class="comparison-item" [class.match]="guess.comparison.season === 'YES'">
+                  <div class="comparison-label">Season</div>
+                  <div class="comparison-value">{{ guess.id.season }}</div>
+                  <div class="comparison-status">{{ guess.comparison.season }}</div>
+                </div>
+
+                <div class="comparison-item" [class]="guess.comparison.passiveCount === 'YES' ? 'match' : (guess.comparison.passiveCount === 'LESS' ? 'less' : 'more')">
+                  <div class="comparison-label">Passives</div>
+                  <div class="comparison-value">{{ guess.id.passiveCount.combat + guess.id.passiveCount.support }}</div>
+                  <div class="comparison-status">
+                    @if (guess.comparison.passiveCount === 'LESS') {
+                      ↓ LESS
+                    } @else if (guess.comparison.passiveCount === 'MORE') {
+                      ↑ MORE
+                    } @else {
+                      YES
+                    }
+                  </div>
+                </div>
+
+                <div class="comparison-keywords">
+                  <div class="keyword-section">
+                    <div class="keyword-label">Precise Keywords:</div>
+                    <div class="keyword-list">
+                      @for (kw of guess.comparison.preciseKeywords; track kw.keyword) {
+                        <span class="keyword" [class.match]="kw.match === 'YES'">
+                          {{ kw.keyword }} <span class="kw-status">{{ kw.match }}</span>
+                        </span>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="keyword-section">
+                    <div class="keyword-label">Status Keywords:</div>
+                    <div class="keyword-list">
+                      @for (kw of guess.comparison.statusKeywords; track kw.keyword) {
+                        <span class="keyword" [class.match]="kw.match === 'YES'">
+                          {{ kw.keyword }} <span class="kw-status">{{ kw.match }}</span>
+                        </span>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div class="skills-comparison">
+                  @for (skill of guess.comparison.skills; track skill.skillNumber) {
+                    <div class="skill-row">
+                      <div class="skill-header">Skill {{ skill.skillNumber }}</div>
+                      @if (skill.exists === 'YES') {
+                        @for (variation of skill.variations; track variation.variationNumber) {
+                          <div class="skill-variation">
+                            <span class="var-label">S{{ skill.skillNumber }}-{{ variation.variationNumber }}:</span>
+                            <span class="skill-attr" [class.match]="variation.sinAffinity === 'YES'">
+                              Sin: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].sinAffinity }}
+                              <span class="status-badge">{{ variation.sinAffinity }}</span>
+                            </span>
+                            <span class="skill-attr" [class.match]="variation.coinCount === 'YES'">
+                              Coins: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].coinCount }}
+                              <span class="status-badge">{{ variation.coinCount }}</span>
+                            </span>
+                            <span class="skill-attr" [class]="variation.finalPower === 'YES' ? 'match' : (variation.finalPower === 'LESS' ? 'less' : 'more')">
+                              Power: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].finalPower }}
+                              <span class="status-badge">
+                                @if (variation.finalPower === 'LESS') {
+                                  ↓ LESS
+                                } @else if (variation.finalPower === 'MORE') {
+                                  ↑ MORE
+                                } @else {
+                                  YES
+                                }
+                              </span>
+                            </span>
+                          </div>
+                        }
+                      } @else {
+                        <span class="skill-missing">This ID doesn't have Skill {{ skill.skillNumber }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  @if (!gameOver()) {
+    <section class="id-selection">
+      <div class="search-container">
+        <input 
+          type="text" 
+          [value]="searchTerm()"
+          (input)="onSearchTermChange($any($event.target).value)"
+          placeholder="Search for an ID..."
+          class="search-input"
+        />
+      </div>
+
+      <div class="id-grid">
+        @for (id of filteredIds(); track id.id) {
+          <div 
+            class="id-card" 
+            [class.used]="usedIds().includes(id.id)"
+            (click)="selectId(id)"
+          >
+            <div class="id-card-portrait">
+              <img [src]="id.imagePath" [alt]="id.name" class="id-card-image" />
+            </div>
+            <span class="id-name">{{ id.name }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (gameOver()) {
+    <section class="game-result">
+      <div class="result-box" [class.victory]="hasWon()">
+        <h2>{{ hasWon() ? 'VICTORY!' : 'DEFEAT' }}</h2>
+        <p>{{ resultMessage() }}</p>
+        @if (targetId()) {
+          <div class="correct-id">
+            <div class="correct-id-portrait">
+              <img [src]="targetId()!.imagePath" [alt]="targetId()!.name" class="correct-id-image" />
+              <img 
+                [src]="'UptieArt/Uptie_4_Frame_' + (targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000') + '.png'" 
+                alt="Frame" 
+                class="correct-id-frame" 
+              />
+            </div>
+            <div class="target-details">
+              <h3>{{ targetId()!.name }}</h3>
+              <div class="target-info">
+                <span><strong>Sinner:</strong> {{ targetId()!.sinner }}</span>
+                <span><strong>Rarity:</strong> {{ targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000' }}</span>
+                <span><strong>Season:</strong> {{ targetId()!.season }}</span>
+              </div>
+            </div>
+          </div>
+        }
+        <p class="next-game">Next ID in: {{ timeUntilNextGame() }}</p>
+      </div>
+    </section>
+  }
+
+  <section class="how-to-play">
+    <h2>How to Play</h2>
+    <div class="rules">
+      <p><strong>🎯 Objective:</strong> Guess today's Limbus Company Identity in 4 tries or less.</p>
+      <p><strong>📅 Daily Challenge:</strong> A new ID is selected each day at midnight.</p>
+      <p><strong>🔍 How to Guess:</strong></p>
+      <ul>
+        <li>Use the search bar to filter available IDs</li>
+        <li>Click on an ID card to select it</li>
+        <li>Confirm your choice in the popup</li>
+        <li>Analyze the comparison results to narrow down your next guess</li>
+      </ul>
+      <p><strong>✓ Feedback Guide:</strong></p>
+      <ul>
+        <li><strong>YES:</strong> The attribute matches the target ID</li>
+        <li><strong>NO:</strong> The attribute doesn't match</li>
+        <li><strong>LESS/MORE:</strong> Your guess has less/more than the target</li>
+        <li><strong>Keywords:</strong> Each keyword from the target is checked individually</li>
+      </ul>
+      <p><strong>⏰ Reset:</strong> The game resets daily with a new ID to guess.</p>
+    </div>
+  </section>
+</div>
+
+<!-- Confirmation Modal -->
+@if (showConfirmModal()) {
+  <div class="modal-overlay" (click)="cancelSelection()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirm Your Guess</h3>
+      @if (selectedId()) {
+        <div class="modal-id">
+          <div class="modal-id-portrait">
+            <img [src]="selectedId()!.imagePath" [alt]="selectedId()!.name" class="modal-id-image" />
+          </div>
+          <div class="modal-id-details">
+            <span class="modal-id-name">{{ selectedId()!.name }}</span>
+            <div class="modal-quick-info">
+              <span>{{ selectedId()!.sinner }}</span>
+              <span>•</span>
+              <span>{{ selectedId()!.rarity === 0 ? '0' : selectedId()!.rarity === 1 ? '00' : '000' }}</span>
+              <span>•</span>
+              <span>{{ selectedId()!.season }}</span>
+            </div>
+          </div>
+        </div>
+      }
+      <p>Are you sure you want to guess this ID?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="cancelSelection()">Cancel</button>
+        <button class="btn-confirm" (click)="confirmGuess()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}

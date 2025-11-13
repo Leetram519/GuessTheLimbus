@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Project Moon / Limbus Company inspired color palette */
+:root {
+  --bg-dark: #1a1410;
+  --bg-medium: #2a2218;
+  --bg-light: #3d3428;
+  --accent-brown: #5c4a32;
+  --accent-gold: #8b7355;
+  --text-light: #e8dcc8;
+  --text-dim: #a89980;
+  --border-color: #4a3c2a;
+  --correct: #3d5a2c;
+  --wrong-position: #6b5429;
+  --wrong: #3a2e24;
+  --hover: #4a3d2f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+}
