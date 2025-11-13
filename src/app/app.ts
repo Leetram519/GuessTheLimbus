@@ -32,8 +32,28 @@ export class App implements OnInit {
   protected readonly resultMessage = signal('');
   protected readonly timeUntilNextGame = signal('');
   protected readonly usedIds = signal<number[]>([]);
+  
+  protected readonly tooltipText = signal('');
+  protected readonly tooltipVisible = signal(false);
+  protected readonly tooltipX = signal(0);
+  protected readonly tooltipY = signal(0);
 
   constructor(private apiService: ApiService) {}
+
+  showTooltip(event: MouseEvent, text: string) {
+    this.tooltipText.set(text);
+    this.tooltipVisible.set(true);
+    this.updateTooltipPosition(event);
+  }
+
+  hideTooltip() {
+    this.tooltipVisible.set(false);
+  }
+
+  updateTooltipPosition(event: MouseEvent) {
+    this.tooltipX.set(event.clientX + 15);
+    this.tooltipY.set(event.clientY + 15);
+  }
 
   async ngOnInit() {
     await this.loadIdsFromApi();

@@ -1,4 +1,11 @@
 <div class="app-container">
+  <!-- Custom Tooltip -->
+  @if (tooltipVisible()) {
+    <div class="custom-tooltip" [style.left.px]="tooltipX()" [style.top.px]="tooltipY()">
+      {{ tooltipText() }}
+    </div>
+  }
+
   <header class="game-header">
     <h1>GUESS THE LIMBUS ID</h1>
     <p class="subtitle">A Project Moon Daily Challenge</p>
@@ -49,9 +56,9 @@
                         @if (guess.comparison.passiveCount === 'YES') {
                           ✓
                         } @else if (guess.comparison.passiveCount === 'LESS') {
-                          ↓
-                        } @else {
                           ↑
+                        } @else {
+                          ↓
                         }
                       </span>
                       <span class="preview-label">Passives</span>
@@ -107,44 +114,62 @@
 
                 <!-- Detailed Comparison -->
                 <div class="comparison-grid">
-                <div class="comparison-item" [class.match]="guess.comparison.sinner === 'YES'">
+                <div class="comparison-item" [class.match]="guess.comparison.sinner === 'YES'" 
+                     (mouseenter)="showTooltip($event, 'The Sinner this ID belongs to. Must match exactly.')"
+                     (mouseleave)="hideTooltip()"
+                     (mousemove)="updateTooltipPosition($event)">
                   <div class="comparison-label">Sinner</div>
                   <div class="comparison-value">{{ guess.id.sinner }}</div>
                   <div class="comparison-status">{{ guess.comparison.sinner }}</div>
                 </div>
 
-                <div class="comparison-item" [class.match]="guess.comparison.rarity === 'YES'">
+                <div class="comparison-item" [class.match]="guess.comparison.rarity === 'YES'" 
+                     (mouseenter)="showTooltip($event, 'The rarity tier of this ID. 0 = base rarity, 00 = 2-star, 000 = 3-star.')"
+                     (mouseleave)="hideTooltip()"
+                     (mousemove)="updateTooltipPosition($event)">
                   <div class="comparison-label">Rarity</div>
                   <div class="comparison-value">{{ guess.id.rarity === 0 ? '0' : guess.id.rarity === 1 ? '00' : '000' }}</div>
                   <div class="comparison-status">{{ guess.comparison.rarity }}</div>
                 </div>
 
-                <div class="comparison-item" [class.match]="guess.comparison.season === 'YES'">
+                <div class="comparison-item" [class.match]="guess.comparison.season === 'YES'" 
+                     (mouseenter)="showTooltip($event, 'The season or event when this ID was released.')"
+                     (mouseleave)="hideTooltip()"
+                     (mousemove)="updateTooltipPosition($event)">
                   <div class="comparison-label">Season</div>
                   <div class="comparison-value">{{ guess.id.season }}</div>
                   <div class="comparison-status">{{ guess.comparison.season }}</div>
                 </div>
 
-                <div class="comparison-item" [class]="guess.comparison.passiveCount === 'YES' ? 'match' : (guess.comparison.passiveCount === 'LESS' ? 'less' : 'more')">
+                <div class="comparison-item" [class]="guess.comparison.passiveCount === 'YES' ? 'match' : (guess.comparison.passiveCount === 'LESS' ? 'less' : 'more')" 
+                     (mouseenter)="showTooltip($event, 'Total number of passive abilities (combat + support). LESS means target has fewer passives, MORE means target has more.')"
+                     (mouseleave)="hideTooltip()"
+                     (mousemove)="updateTooltipPosition($event)">
                   <div class="comparison-label">Passives</div>
                   <div class="comparison-value">{{ guess.id.passiveCount.combat + guess.id.passiveCount.support }}</div>
                   <div class="comparison-status">
                     @if (guess.comparison.passiveCount === 'LESS') {
-                      ↓ LESS
-                    } @else if (guess.comparison.passiveCount === 'MORE') {
                       ↑ MORE
+                    } @else if (guess.comparison.passiveCount === 'MORE') {
+                      ↓ LESS
                     } @else {
                       YES
                     }
                   </div>
                 </div>
 
-                <div class="comparison-keywords">
+                <div class="comparison-keywords" 
+                     (mouseenter)="showTooltip($event, 'Keywords are traits or affiliations of the ID. Each keyword is checked individually.')"
+                     (mouseleave)="hideTooltip()"
+                     (mousemove)="updateTooltipPosition($event)">
                   <div class="keyword-section">
                     <div class="keyword-label">Precise Keywords:</div>
                     <div class="keyword-list">
                       @for (kw of guess.comparison.preciseKeywords; track kw.keyword) {
-                        <span class="keyword" [class.match]="kw.match === 'YES'">
+                        <span class="keyword" [class.match]="kw.match === 'YES'" 
+                              (mouseenter)="showTooltip($event, 'Precise keyword from your guess: ' + kw.keyword + '. ' + (kw.match === 'YES' ? 'This keyword is also on the target ID!' : 'This keyword is NOT on the target ID.'))"
+                              (mouseleave)="hideTooltip()"
+                              (mousemove)="updateTooltipPosition($event)">
                           {{ kw.keyword }} <span class="kw-status">{{ kw.match }}</span>
                         </span>
                       }
@@ -155,7 +180,10 @@
                     <div class="keyword-label">Status Keywords:</div>
                     <div class="keyword-list">
                       @for (kw of guess.comparison.statusKeywords; track kw.keyword) {
-                        <span class="keyword" [class.match]="kw.match === 'YES'">
+                        <span class="keyword" [class.match]="kw.match === 'YES'" 
+                              (mouseenter)="showTooltip($event, 'Status keyword from your guess: ' + kw.keyword + '. ' + (kw.match === 'YES' ? 'This keyword is also on the target ID!' : 'This keyword is NOT on the target ID.'))"
+                              (mouseleave)="hideTooltip()"
+                              (mousemove)="updateTooltipPosition($event)">
                           {{ kw.keyword }} <span class="kw-status">{{ kw.match }}</span>
                         </span>
                       }
@@ -165,27 +193,39 @@
 
                 <div class="skills-comparison">
                   @for (skill of guess.comparison.skills; track skill.skillNumber) {
-                    <div class="skill-row">
+                    <div class="skill-row" 
+                         (mouseenter)="showTooltip($event, 'Skill ' + skill.skillNumber + ' comparison. Each skill has sin affinity, coin count, and final power.')"
+                         (mouseleave)="hideTooltip()"
+                         (mousemove)="updateTooltipPosition($event)">
                       <div class="skill-header">Skill {{ skill.skillNumber }}</div>
                       @if (skill.exists === 'YES') {
                         @for (variation of skill.variations; track variation.variationNumber) {
                           <div class="skill-variation">
                             <span class="var-label">S{{ skill.skillNumber }}-{{ variation.variationNumber }}:</span>
-                            <span class="skill-attr" [class.match]="variation.sinAffinity === 'YES'">
+                            <span class="skill-attr" [class.match]="variation.sinAffinity === 'YES'" 
+                                  (mouseenter)="showTooltip($event, 'Sin Affinity: The sin type of this skill (Wrath, Lust, Sloth, Gluttony, Gloom, Pride, Envy).')"
+                                  (mouseleave)="hideTooltip()"
+                                  (mousemove)="updateTooltipPosition($event)">
                               Sin: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].sinAffinity }}
                               <span class="status-badge">{{ variation.sinAffinity }}</span>
                             </span>
-                            <span class="skill-attr" [class.match]="variation.coinCount === 'YES'">
+                            <span class="skill-attr" [class.match]="variation.coinCount === 'YES'" 
+                                  (mouseenter)="showTooltip($event, 'Coin Count: The number of coin flips this skill uses.')"
+                                  (mouseleave)="hideTooltip()"
+                                  (mousemove)="updateTooltipPosition($event)">
                               Coins: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].coinCount }}
                               <span class="status-badge">{{ variation.coinCount }}</span>
                             </span>
-                            <span class="skill-attr" [class]="variation.finalPower === 'YES' ? 'match' : (variation.finalPower === 'LESS' ? 'less' : 'more')">
+                            <span class="skill-attr" [class]="variation.finalPower === 'YES' ? 'match' : (variation.finalPower === 'LESS' ? 'less' : 'more')" 
+                                  (mouseenter)="showTooltip($event, 'Final Power: The base power value of this skill. LESS means target has lower power, MORE means target has higher power.')"
+                                  (mouseleave)="hideTooltip()"
+                                  (mousemove)="updateTooltipPosition($event)">
                               Power: {{ guess.id.skills[skill.skillNumber - 1].variations[variation.variationNumber - 1].finalPower }}
                               <span class="status-badge">
                                 @if (variation.finalPower === 'LESS') {
-                                  ↓ LESS
-                                } @else if (variation.finalPower === 'MORE') {
                                   ↑ MORE
+                                } @else if (variation.finalPower === 'MORE') {
+                                  ↓ LESS
                                 } @else {
                                   YES
                                 }
@@ -272,21 +312,95 @@
     <div class="rules">
       <p><strong>🎯 Objective:</strong> Guess today's Limbus Company Identity in 4 tries or less.</p>
       <p><strong>📅 Daily Challenge:</strong> A new ID is selected each day at midnight.</p>
-      <p><strong>🔍 How to Guess:</strong></p>
+      
+      <h3>🔍 How to Guess</h3>
       <ul>
         <li>Use the search bar to filter available IDs</li>
         <li>Click on an ID card to select it</li>
         <li>Confirm your choice in the popup</li>
         <li>Analyze the comparison results to narrow down your next guess</li>
       </ul>
-      <p><strong>✓ Feedback Guide:</strong></p>
+      
+      <h3>✓ Understanding the Feedback</h3>
+      <p>After each guess, you'll see a <strong>Quick Summary</strong> and <strong>Detailed Comparison</strong>:</p>
+      
+      <h4>Color Guide:</h4>
       <ul>
-        <li><strong>YES:</strong> The attribute matches the target ID</li>
-        <li><strong>NO:</strong> The attribute doesn't match</li>
-        <li><strong>LESS/MORE:</strong> Your guess has less/more than the target</li>
-        <li><strong>Keywords:</strong> Each keyword from the target is checked individually</li>
+        <li><strong class="color-yes">🟢 Green / YES:</strong> The attribute matches the target ID perfectly</li>
+        <li><strong class="color-no">🔴 Red / NO:</strong> The attribute doesn't match the target ID</li>
+        <li><strong class="color-partial">🟠 Orange / ~ / LESS/MORE:</strong> Partial match or directional hint</li>
       </ul>
-      <p><strong>⏰ Reset:</strong> The game resets daily with a new ID to guess.</p>
+      
+      <h4>Statistics Explained:</h4>
+      <ul>
+        <li><strong>Sinner:</strong> Which of the 12 Sinners this ID belongs to (Yi Sang, Faust, Don Quixote, etc.)</li>
+        <li><strong>Rarity:</strong> The tier of the ID</li>
+        <li><strong>Season:</strong> When the ID was released (Standard Fare, 1 = Season 1, 2 = Season 2, Walpurgisnacht I, Walpurgisnacht II, etc.)</li>
+        <li><strong>Passives:</strong> Total number of passive abilities (combat + support)
+          <ul>
+            <li><strong>↓ LESS:</strong> You need to guess an ID that has LESS passives than your current guess</li>
+            <li><strong>↑ MORE:</strong> You need to guess an ID that has MORE passives than your current guess</li>
+          </ul>
+        </li>
+        <li><strong>Precise Keywords:</strong> Faction or affiliation keywords (e.g., "Seven Association", "Molar Office", "Fixer")
+          <ul>
+            <li>Each keyword from YOUR guess is checked individually</li>
+            <li><strong>YES</strong> means that keyword is also on the target ID</li>
+            <li><strong>NO</strong> means that keyword is not on the target ID</li>
+            <li><strong>~</strong> in Quick Summary means some keywords match, but not all</li>
+          </ul>
+        </li>
+        <li><strong>Status Keywords:</strong> Status effects the ID inflicts (e.g., "Rupture", "Tremor", "Sinking")
+          <ul>
+            <li>Works the same as Precise Keywords</li>
+          </ul>
+        </li>
+        <li><strong>Skills:</strong> Each ID has 1-3 skills, and each skill may have variations
+          <ul>
+            <li><strong>Sin Affinity:</strong> The sin type (Wrath, Lust, Sloth, Gluttony, Gloom, Pride, Envy)</li>
+            <li><strong>Coin Count:</strong> Number of coin flips the skill uses (1-3)</li>
+            <li><strong>Final Power:</strong> The maximum amount of clash power that you can do with this skill, excluding any passives or buffs. (For instance, <strong>Grip Sinclair's Skill 3 has 30 Final Power</strong>, and <strong>Thumb Meursault's Skill 3-2 has 18 Final Power</strong>)
+              <ul>
+                <li><strong>↓ LESS:</strong> You need to guess an ID that has LESS Final Power than your current guess</li>
+                <li><strong>↑ MORE:</strong> You need to guess an ID that has MORE Final Power than your current guess</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      
+      <h3>💡 Strategy Tips</h3>
+      <ul>
+        <li>LESS/MORE hints for passives and skill power can help you triangulate the exact values</li>
+        <li>Try to aim for somewhat common IDs, such as the N Corp. IDs, or the Wuthering Heights IDs</li>
+        <li>IDs that do multiple status effects are really good to guess</li>
+        <li>Guessing Ring Sang is cheating</li>
+      </ul>
+      
+      <h3>⚠️ Important Info</h3>
+      <ul>
+        <li>Ring Sang and Ring Outis have been nerfed (They only count as bleed). This is due to Kim Jihoon hating them both.</li>
+      </ul>
+      
+      <p><strong>⏰ Reset:</strong> The game resets daily at midnight with a new ID to guess.</p>
+      
+      <div class="glory-section">
+        <p class="glory-text">🌟 GLORY TO LIMBUS COMPANY 🌟</p>
+        <p class="glory-text">✨ GLORY TO KIM JIHOON ✨</p>
+        <p class="glory-text final">🎭 GOOD LUCK, MANAGER! 🎭</p>
+      </div>
+    </div>
+    
+    <div class="credits">
+      <h3>Credits</h3>
+      <p><strong>Created by: </strong> <a href="https://ko-fi.com/glasshatstudios" target="_blank" rel="noopener noreferrer">Glasshat Studios</a></p>
+      <p>Inspired by Wordle and the incredible world of <em>Limbus Company</em> by Project Moon.</p>
+      <div class="support-section">
+        <p>Enjoying the game? Support us on Ko-fi!</p>
+        <a href="https://ko-fi.com/glasshatstudios" target="_blank" rel="noopener noreferrer" class="kofi-button">
+          <span class="kofi-icon">☕</span> Donate on Ko-fi
+        </a>
+      </div>
     </div>
   </section>
 </div>
