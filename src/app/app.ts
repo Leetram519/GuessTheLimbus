@@ -31,12 +31,17 @@ export class App implements OnInit {
   protected readonly hasWon = signal(false);
   protected readonly resultMessage = signal('');
   protected readonly timeUntilNextGame = signal('');
+  protected readonly serverTimezone = signal('Europe/Paris');
+  protected readonly serverResetTime = signal(0);
   protected readonly usedIds = signal<number[]>([]);
   
   protected readonly tooltipText = signal('');
   protected readonly tooltipVisible = signal(false);
   protected readonly tooltipX = signal(0);
   protected readonly tooltipY = signal(0);
+  
+  protected readonly showNewsModal = signal(false);
+  protected readonly isSubmitting = signal(false);
 
   constructor(private apiService: ApiService) {}
 
@@ -53,6 +58,18 @@ export class App implements OnInit {
   updateTooltipPosition(event: MouseEvent) {
     this.tooltipX.set(event.clientX + 15);
     this.tooltipY.set(event.clientY + 15);
+  }
+  
+  openNewsModal() {
+    this.showNewsModal.set(true);
+  }
+  
+  closeNewsModal() {
+    this.showNewsModal.set(false);
+  }
+  
+  openBugReport() {
+    window.open('https://github.com/Leetram519/GuessTheLimbus/issues', '_blank');
   }
 
   async ngOnInit() {
@@ -75,6 +92,8 @@ export class App implements OnInit {
     
     if (dailyId) {
       this.targetIdNumber.set(dailyId.id);
+      this.serverTimezone.set(dailyId.timezone);
+      this.serverResetTime.set(dailyId.msUntilReset);
       const targetIdData = this.allIds().find(id => id.id === dailyId.id);
       
       if (targetIdData) {
@@ -117,34 +136,45 @@ export class App implements OnInit {
 
   async confirmGuess() {
     const selected = this.selectedId();
-    if (!selected) return;
+    if (!selected || this.isSubmitting()) return;
     
-    const result = await this.apiService.verifyGuess(selected.id, this.targetIdNumber());
-    if (!result) {
-      console.error('Failed to verify guess');
-      return;
+    this.isSubmitting.set(true);
+    
+    try {
+      const result = await this.apiService.verifyGuess(selected.id, this.targetIdNumber());
+      if (!result) {
+        console.error('Failed to verify guess');
+        this.isSubmitting.set(false);
+        return;
+      }
+      
+      const currentGuesses = [...this.guesses()];
+      currentGuesses[this.currentGuess()] = {
+        id: result.guessedId,
+        comparison: result.comparison,
+        isCorrect: result.correct
+      };
+      this.guesses.set(currentGuesses);
+      
+      this.usedIds.update(ids => [...ids, selected.id]);
+      this.currentGuess.update(g => g + 1);
+      
+      if (result.correct) {
+        this.endGame(true);
+      } else if (this.currentGuess() >= 4) {
+        this.endGame(false);
+      }
+      
+      this.saveGameState();
+      this.showConfirmModal.set(false);
+      this.selectedId.set(null);
+      
+      // Reset search for next guess
+      this.searchTerm.set('');
+      this.filteredIds.set([...this.allIds()]);
+    } finally {
+      this.isSubmitting.set(false);
     }
-    
-    const currentGuesses = [...this.guesses()];
-    currentGuesses[this.currentGuess()] = {
-      id: result.guessedId,
-      comparison: result.comparison,
-      isCorrect: result.correct
-    };
-    this.guesses.set(currentGuesses);
-    
-    this.usedIds.update(ids => [...ids, selected.id]);
-    this.currentGuess.update(g => g + 1);
-    
-    if (result.correct) {
-      this.endGame(true);
-    } else if (this.currentGuess() >= 4) {
-      this.endGame(false);
-    }
-    
-    this.saveGameState();
-    this.showConfirmModal.set(false);
-    this.selectedId.set(null);
   }
 
   endGame(won: boolean) {
@@ -159,9 +189,16 @@ export class App implements OnInit {
   }
 
   updateTimeUntilNextGame() {
-    const now = new Date();
-    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    const diff = tomorrow.getTime() - now.getTime();
+    // Get current time in server's timezone (Europe/Paris)
+    const nowLocal = new Date();
+    const parisTimeString = nowLocal.toLocaleString('en-US', { timeZone: this.serverTimezone() });
+    const nowParis = new Date(parisTimeString);
+    
+    // Calculate midnight in Paris timezone
+    const tomorrowParis = new Date(nowParis.getFullYear(), nowParis.getMonth(), nowParis.getDate() + 1);
+    
+    // Get the difference
+    const diff = tomorrowParis.getTime() - nowParis.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
@@ -169,7 +206,10 @@ export class App implements OnInit {
   }
 
   getDateString(): string {
-    const today = new Date();
+    // Get date string in server's timezone (Europe/Paris)
+    const nowLocal = new Date();
+    const parisTimeString = nowLocal.toLocaleString('en-US', { timeZone: this.serverTimezone() });
+    const today = new Date(parisTimeString);
     return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
   }
 

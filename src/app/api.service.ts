@@ -52,6 +52,8 @@ export interface GuessComparison {
 export interface DailyIdResponse {
   id: number;
   date: string;
+  timezone: string;
+  msUntilReset: number;
 }
 
 export interface VerifyGuessResponse {
@@ -64,7 +66,7 @@ export interface VerifyGuessResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:4000/api';
+  private apiUrl = 'https://guessthelimbus.com/api';
 
   async getAllIds(): Promise<LimbusId[]> {
     try {

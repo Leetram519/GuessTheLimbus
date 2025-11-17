@@ -7,6 +7,16 @@
   }
 
   <header class="game-header">
+    <div class="header-buttons">
+      <button class="header-btn news-btn" (click)="openNewsModal()">
+        <span class="btn-icon">📰</span>
+        <span class="btn-text">News</span>
+      </button>
+      <button class="header-btn bug-btn" (click)="openBugReport()">
+        <span class="btn-icon">🐛</span>
+        <span class="btn-text">Report Bug</span>
+      </button>
+    </div>
     <h1>GUESS THE LIMBUS ID</h1>
     <p class="subtitle">A Project Moon Daily Challenge</p>
   </header>
@@ -257,6 +267,7 @@
           (input)="onSearchTermChange($any($event.target).value)"
           placeholder="Search for an ID..."
           class="search-input"
+          #searchInput
         />
       </div>
 
@@ -310,8 +321,20 @@
   <section class="how-to-play">
     <h2>How to Play</h2>
     <div class="rules">
-      <p><strong>🎯 Objective:</strong> Guess today's Limbus Company Identity in 4 tries or less.</p>
-      <p><strong>📅 Daily Challenge:</strong> A new ID is selected each day at midnight.</p>
+      <div class="info-grid">
+        <div class="info-card">
+          <h5>🎯 Objective</h5>
+          <p>Guess today's Limbus Company Identity in 4 tries or less</p>
+        </div>
+        <div class="info-card">
+          <h5>📅 Daily Challenge</h5>
+          <p>A new ID is selected each day at midnight (France timezone)</p>
+        </div>
+        <div class="info-card">
+          <h5>⏰ Reset Time</h5>
+          <p id="resetInfo">The game resets daily at midnight with a new ID to guess</p>
+        </div>
+      </div>
       
       <h3>🔍 How to Guess</h3>
       <ul>
@@ -331,59 +354,88 @@
         <li><strong class="color-partial">🟠 Orange / ~ / LESS/MORE:</strong> Partial match or directional hint</li>
       </ul>
       
-      <h4>Statistics Explained:</h4>
-      <ul>
-        <li><strong>Sinner:</strong> Which of the 12 Sinners this ID belongs to (Yi Sang, Faust, Don Quixote, etc.)</li>
-        <li><strong>Rarity:</strong> The tier of the ID</li>
-        <li><strong>Season:</strong> When the ID was released (Standard Fare, 1 = Season 1, 2 = Season 2, Walpurgisnacht I, Walpurgisnacht II, etc.)</li>
-        <li><strong>Passives:</strong> Total number of passive abilities (combat + support)
-          <ul>
-            <li><strong>↓ LESS:</strong> You need to guess an ID that has LESS passives than your current guess</li>
-            <li><strong>↑ MORE:</strong> You need to guess an ID that has MORE passives than your current guess</li>
-          </ul>
-        </li>
-        <li><strong>Precise Keywords:</strong> Faction or affiliation keywords (e.g., "Seven Association", "Molar Office", "Fixer")
-          <ul>
-            <li>Each keyword from YOUR guess is checked individually</li>
-            <li><strong>YES</strong> means that keyword is also on the target ID</li>
-            <li><strong>NO</strong> means that keyword is not on the target ID</li>
-            <li><strong>~</strong> in Quick Summary means some keywords match, but not all</li>
-          </ul>
-        </li>
-        <li><strong>Status Keywords:</strong> Status effects the ID inflicts (e.g., "Rupture", "Tremor", "Sinking")
-          <ul>
-            <li>Works the same as Precise Keywords</li>
-          </ul>
-        </li>
-        <li><strong>Skills:</strong> Each ID has 1-3 skills, and each skill may have variations
-          <ul>
-            <li><strong>Sin Affinity:</strong> The sin type (Wrath, Lust, Sloth, Gluttony, Gloom, Pride, Envy)</li>
-            <li><strong>Coin Count:</strong> Number of coin flips the skill uses (1-3)</li>
-            <li><strong>Final Power:</strong> The maximum amount of clash power that you can do with this skill, excluding any passives or buffs. (For instance, <strong>Grip Sinclair's Skill 3 has 30 Final Power</strong>, and <strong>Thumb Meursault's Skill 3-2 has 18 Final Power</strong>)
-              <ul>
-                <li><strong>↓ LESS:</strong> You need to guess an ID that has LESS Final Power than your current guess</li>
-                <li><strong>↑ MORE:</strong> You need to guess an ID that has MORE Final Power than your current guess</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <h3>📊 Statistics Explained</h3>
+      <div class="stat-section">
+        <strong>Sinner:</strong> Which of the 12 Sinners this ID belongs to (Yi Sang, Faust, Don Quixote, etc.)
+      </div>
       
+      <div class="stat-section">
+        <strong>Rarity:</strong> The tier of the ID (0 = base, 00 = 2-star, 000 = 3-star)
+      </div>
+      
+      <div class="stat-section">
+        <strong>Season:</strong> When the ID was released (Standard Fare, Season 1, Season 2, Walpurgisnacht I, II, etc.)
+      </div>
+      
+      <div class="stat-section">
+        <strong>Passives:</strong> Total number of passive abilities (combat + support)
+        <ul>
+          <li><strong>↓ LESS:</strong> Target ID has fewer passives than your guess</li>
+          <li><strong>↑ MORE:</strong> Target ID has more passives than your guess</li>
+        </ul>
+      </div>
+      
+      <div class="stat-section">
+        <strong>Precise Keywords:</strong> Faction or affiliation keywords (e.g., "Seven Association", "Molar Office", "Fixer")
+        <ul>
+          <li>Each keyword from YOUR guess is checked individually</li>
+          <li><strong>YES</strong> = Keyword is also on the target ID</li>
+          <li><strong>NO</strong> = Keyword is NOT on the target ID</li>
+          <li><strong>~</strong> (in summary) = Some keywords match, but not all</li>
+        </ul>
+      </div>
+      
+      <div class="stat-section">
+        <strong>Status Keywords:</strong> Status effects the ID inflicts (e.g., "Rupture", "Tremor", "Sinking")
+        <ul>
+          <li>Works the same as Precise Keywords - each is checked individually</li>
+        </ul>
+      </div>
+      
+      <div class="stat-section">
+        <strong>Skills:</strong> Each ID has 1-3 skills, and each skill may have variations
+        <ul>
+          <li><strong>Sin Affinity:</strong> The sin type (Wrath, Lust, Sloth, Gluttony, Gloom, Pride, Envy)</li>
+          <li><strong>Coin Count:</strong> Number of coin flips the skill uses (1-3)</li>
+          <li><strong>Final Power:</strong> Maximum clash power from this skill (excluding passives/buffs)
+            <ul>
+              <li><strong>↓ LESS:</strong> Target ID has lower Final Power</li>
+              <li><strong>↑ MORE:</strong> Target ID has higher Final Power</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
       <h3>💡 Strategy Tips</h3>
-      <ul>
-        <li>LESS/MORE hints for passives and skill power can help you triangulate the exact values</li>
-        <li>Try to aim for somewhat common IDs, such as the N Corp. IDs, or the Wuthering Heights IDs</li>
-        <li>IDs that do multiple status effects are really good to guess</li>
-        <li>Guessing Ring Sang is cheating</li>
-      </ul>
+      <div class="tip-box">
+        <strong>💪 Use LESS/MORE Hints:</strong> These directional hints for passives and skill power help you triangulate the exact values
+      </div>
+      <div class="tip-box">
+        <strong>🎯 Smart Guessing:</strong> Try common IDs like N Corp., Wuthering Heights, or IDs with multiple status effects
+      </div>
+      <div class="tip-box">
+        <strong>🔑 Keywords are Gold:</strong> IDs with multiple unique keywords can quickly narrow down possibilities
+      </div>
       
       <h3>⚠️ Important Info</h3>
-      <ul>
-        <li>Ring Sang and Ring Outis have been nerfed (They only count as bleed). This is due to Kim Jihoon hating them both.</li>
-      </ul>
+      <div class="warning-box">
+        <strong>Nerfed IDs:</strong> Ring Sang and Ring Outis only count as "Bleed" (Kim Jihoon hates them both)
+      </div>
       
-      <p><strong>⏰ Reset:</strong> The game resets daily at midnight with a new ID to guess.</p>
-      
+      <p><strong>Contributing:</strong> GuessTheLimbus is <strong>FREE & OPEN SOURCE</strong>. This means that you and anybody else can also contribute to the project.</p>
+      <div class="contributing-links">
+        <a href="https://github.com/Leetram519/GuessTheLimbus" target="_blank" rel="noopener noreferrer" class="contrib-link">
+          <span class="contrib-icon">🎨</span>
+          <span class="contrib-text">Frontend</span>
+          <span class="contrib-desc">Visual representation of the website (handles the search bar, info display...)</span>
+        </a>
+        <a href="https://github.com/Leetram519/GuessTheLimbusBack" target="_blank" rel="noopener noreferrer" class="contrib-link">
+          <span class="contrib-icon">⚙️</span>
+          <span class="contrib-text">Backend</span>
+          <span class="contrib-desc">Everything server-side, handles the database and guessing</span>
+        </a>
+      </div>
+
       <div class="glory-section">
         <p class="glory-text">🌟 GLORY TO LIMBUS COMPANY 🌟</p>
         <p class="glory-text">✨ GLORY TO KIM JIHOON ✨</p>
@@ -429,8 +481,79 @@
       }
       <p>Are you sure you want to guess this ID?</p>
       <div class="modal-buttons">
-        <button class="btn-cancel" (click)="cancelSelection()">Cancel</button>
-        <button class="btn-confirm" (click)="confirmGuess()">Confirm</button>
+        <button class="btn-cancel" (click)="cancelSelection()" [disabled]="isSubmitting()">Cancel</button>
+        <button class="btn-confirm" (click)="confirmGuess()" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="loading-spinner"></span>
+            Submitting...
+          } @else {
+            Confirm
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- News Modal -->
+@if (showNewsModal()) {
+  <div class="modal-overlay" (click)="closeNewsModal()">
+    <div class="modal-content news-modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeNewsModal()">✕</button>
+      <h2>📰 Latest News</h2>
+      
+      <div class="news-section">
+        <div class="news-item">
+          <h3>🔧 Version 1.0.1b</h3>
+          <p class="news-date">November 17, 2025</p>
+          <ul>
+            <li>✅ Fixed an issue where you could guess the same id twice</li>
+            <li>✅ Whoops, fucked up the silly goofy id frame</li>
+          </ul>
+          <div class="contributors">
+            <span class="contributor-label">👥 Contributors:</span>
+            <span class="contributor-name gold">Leetram</span>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <h3>🔧 Version 1.0.1</h3>
+          <p class="news-date">November 17, 2025</p>
+          <ul>
+            <li>✅ Added mobile responsive design</li>
+            <li>✅ Fixed search and submit functionality</li>
+            <li>✅ Improved image display on all devices</li>
+            <li>✅ Fixed an issue where the "time until next guess" was wrong (due to timezones.)</li>
+          </ul>
+          <div class="contributors">
+            <span class="contributor-label">👥 Contributors:</span>
+            <span class="contributor-name gold">Leetram</span>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <h3>🎉 Version 1.0.0 - First Release</h3>
+          <p class="news-date">November 14, 2025</p>
+          <p>Welcome, Manager! This is a limbus company ID guessing game that I made because frankly I was bored as hell. Data is fetched automatically through the wiki.gg pages, and then i double check for the obvious issues (but of course sometimes I miss them, so don't hesitate to report issues.)</p>
+          <div class="contributors">
+            <span class="contributor-label">👥 Contributors:</span>
+            <span class="contributor-name gold">Leetram</span>
+          </div>
+        </div>
+
+        <div class="news-item">
+          <h3>🚀 Coming Soon</h3>
+          <p class="news-date">Planned Features</p>
+          <ul>
+            <li>🎯 Statistics tracking (win rate, average tries, etc.)</li>
+            <li>♾️ Endless mode</li>
+            <li>🔥 Mounting Trials</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="news-footer">
+        <p>Have suggestions? Found a bug? Use the Report Bug button or visit our <a href="https://github.com/Leetram519/GuessTheLimbusBack/issues" target="_blank">GitHub Issues</a>!</p>
       </div>
     </div>
   </div>
