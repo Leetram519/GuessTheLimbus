@@ -1,13 +1,60 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>GuessTheLimbus</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>Guess The Limbus - Daily Limbus Company ID Challenge</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Test your Limbus Company knowledge with a daily ID guessing challenge.">
+    <meta name="keywords" content="Limbus Company, PM, Project Moon, Wordle, Daily, ID Guess, Sinner, ID, Limbus, LCB, LC, Yi Sang, Faust, Rodion, Gregor, Don Quixote, Quixote, Hong Lu, Ryoshu, Don, Meursault, Heathcliff, Ishmael">
+    <meta name="author" content="Guess The Limbus">
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="canonical" href="https://guessthelimbus.com/">
+    
+    <!-- Open Graph / Facebook / Discord -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://guessthelimbus.com/">
+    <meta property="og:title" content="Guess The Limbus - Daily Limbus Company Guessing Game">
+    <meta property="og:description" content="Test your Limbus Company knowledge with a daily ID guessing challenge.">
+    <meta property="og:image" content="https://guessthelimbus.com/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1200">
+    <meta property="og:site_name" content="Guess The Limbus">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://guessthelimbus.com/">
+    <meta name="twitter:title" content="Guess The Limbus - Daily Limbus Company Guessing Game">
+    <meta name="twitter:description" content="Test your Limbus Company knowledge with a daily ID guessing challenge.">
+    <meta name="twitter:image" content="https://guessthelimbus.com/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+  </head>
+  <body>
+    <app-root></app-root>
+    <script src="runtime-config.js"></script>
+    <script>
+      (function () {
+        const measurementId = window.__RUNTIME_CONFIG__?.GA_MEASUREMENT_ID;
+
+        if (!measurementId) {
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', measurementId);
+      })();
+    </script>
+  </body>
 </html>

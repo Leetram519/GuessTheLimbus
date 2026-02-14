@@ -43,3 +43,4 @@ __screenshots__/
 Thumbs.db
 
 deploy.sh
+public/runtime-config.js

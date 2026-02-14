@@ -57,3 +57,12 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Analytics runtime config (keep out of Git)
+
+The Google Analytics measurement ID is loaded from `public/runtime-config.js`.
+
+1. Copy `public/runtime-config.example.js` to `public/runtime-config.js`
+2. Set your real ID in `GA_MEASUREMENT_ID`
+
+`public/runtime-config.js` is git-ignored so the real tag does not appear in GitHub.
