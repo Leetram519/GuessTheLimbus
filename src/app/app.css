@@ -1218,6 +1218,7 @@
   margin-top: 1rem;
   padding-top: 0.8rem;
   border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
 }
 
 .contributor-label {
