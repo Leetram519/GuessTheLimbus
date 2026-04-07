@@ -1,0 +1,121 @@
+<section class="how-to-play">
+  <h2>How to Play</h2>
+  <div class="rules">
+    <div class="info-grid">
+      <div class="info-card">
+        <h5>🎯 Objective</h5>
+        <p>Guess today's Limbus Company Identity in 4 tries or less</p>
+      </div>
+      <div class="info-card">
+        <h5>📅 Daily Challenge</h5>
+        <p>A new ID is selected each day at midnight (France timezone)</p>
+      </div>
+      <div class="info-card">
+        <h5>⏰ Reset Time</h5>
+        <p id="resetInfo">The game resets daily at midnight with a new ID to guess</p>
+      </div>
+    </div>
+
+    <h3>🔍 How to Guess</h3>
+    <ul>
+      <li>Use the search bar to filter available IDs</li>
+      <li>Click on an ID card to select it</li>
+      <li>Confirm your choice in the popup</li>
+      <li>Analyze the comparison results to narrow down your next guess</li>
+    </ul>
+
+    <h3>✓ Understanding the Feedback</h3>
+    <p>After each guess, you'll see a <strong>Quick Summary</strong> and <strong>Detailed Comparison</strong>:</p>
+
+    <h4>Color Guide:</h4>
+    <ul>
+      <li><strong class="color-yes">🟢 Green / YES:</strong> The attribute matches the target ID perfectly</li>
+      <li><strong class="color-no">🔴 Red / NO:</strong> The attribute doesn't match the target ID</li>
+      <li><strong class="color-partial">🟠 Orange / ~ / LESS/MORE:</strong> Partial match or directional hint</li>
+    </ul>
+
+    <h3>📊 Statistics Explained</h3>
+    <div class="stat-section">
+      <strong>Sinner:</strong> Which of the 12 Sinners this ID belongs to (Yi Sang, Faust, Don Quixote, etc.)
+    </div>
+
+    <div class="stat-section">
+      <strong>Rarity:</strong> The tier of the ID (0 = base, 00 = 2-star, 000 = 3-star)
+    </div>
+
+    <div class="stat-section">
+      <strong>Season:</strong> When the ID was released (Standard Fare, Season 1, Season 2, Walpurgisnacht I, II, etc.)
+    </div>
+
+    <div class="stat-section">
+      <strong>Passives:</strong> Total number of passive abilities (combat + support)
+      <ul>
+        <li><strong>↓ LESS:</strong> Target ID has fewer passives than your guess</li>
+        <li><strong>↑ MORE:</strong> Target ID has more passives than your guess</li>
+      </ul>
+    </div>
+
+    <div class="stat-section">
+      <strong>Precise Keywords:</strong> Faction or affiliation keywords (e.g., "Seven Association", "Molar Office", "Fixer")
+      <ul>
+        <li>Each keyword from YOUR guess is checked individually</li>
+        <li><strong>YES</strong> = Keyword is also on the target ID</li>
+        <li><strong>NO</strong> = Keyword is NOT on the target ID</li>
+        <li><strong>~</strong> (in summary) = Some keywords match, but not all</li>
+      </ul>
+    </div>
+
+    <div class="stat-section">
+      <strong>Status Keywords:</strong> Status effects the ID inflicts or gains (e.g., "Rupture", "Defense Level UP", "Unbreakable Coins")
+      <ul>
+        <li>Works the same as Precise Keywords - each is checked individually</li>
+      </ul>
+    </div>
+
+    <div class="stat-section">
+      <strong>Skills:</strong> Each ID has 1-3 skills, and each skill may have variations
+      <ul>
+        <li><strong>Sin Affinity:</strong> The sin type (Wrath, Lust, Sloth, Gluttony, Gloom, Pride, Envy)</li>
+        <li><strong>Coin Count:</strong> Number of coin flips the skill uses (1-3)</li>
+        <li><strong>Final Power:</strong> Maximum clash power from this skill (excluding passives/buffs)
+          <ul>
+            <li><strong>↓ LESS:</strong> Target ID has lower Final Power</li>
+            <li><strong>↑ MORE:</strong> Target ID has higher Final Power</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3>⚠️ Nerfs</h3>
+    <div class="warning-box">
+      <strong>Ring Yi Sang:</strong> Only count as "Bleed".
+      <strong>Ring Outis:</strong> Only count as "Bleed".
+    </div>
+
+    <p><strong>Contributing:</strong> GuessTheLimbus is <strong>FREE & OPEN SOURCE</strong>. This means that you and anybody else can also contribute to the project.</p>
+    <div class="contributing-links">
+      <a href="https://github.com/Leetram519/GuessTheLimbus" target="_blank" rel="noopener noreferrer" class="contrib-link">
+        <span class="contrib-icon">🎨</span>
+        <span class="contrib-text">Frontend</span>
+        <span class="contrib-desc">Visual representation of the website (handles the search bar, info display...)</span>
+      </a>
+      <a href="https://github.com/Leetram519/GuessTheLimbusBack" target="_blank" rel="noopener noreferrer" class="contrib-link">
+        <span class="contrib-icon">⚙️</span>
+        <span class="contrib-text">Backend</span>
+        <span class="contrib-desc">Everything server-side, handles the database and guessing</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="credits">
+    <h3>Credits</h3>
+    <p><strong>Created by: </strong> <a href="https://ko-fi.com/glasshatstudios" target="_blank" rel="noopener noreferrer">Glasshat Studios</a></p>
+    <p>Inspired by Wordle and the incredible world of <em>Limbus Company</em> by Project Moon.</p>
+    <div class="support-section">
+      <p>Enjoying the game? Support us on Ko-fi!</p>
+      <a href="https://ko-fi.com/glasshatstudios" target="_blank" rel="noopener noreferrer" class="kofi-button">
+        <span class="kofi-icon">☕</span> Donate on Ko-fi
+      </a>
+    </div>
+  </div>
+</section>

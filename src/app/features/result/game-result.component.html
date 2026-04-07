@@ -1,0 +1,27 @@
+<section class="game-result">
+  <div class="result-box" [class.victory]="hasWon()">
+    <h2>{{ hasWon() ? 'VICTORY!' : 'DEFEAT' }}</h2>
+    <p>{{ resultMessage() }}</p>
+    @if (targetId()) {
+      <div class="correct-id">
+        <div class="correct-id-portrait">
+          <img [src]="targetId()!.imagePath" [alt]="targetId()!.name" class="correct-id-image" />
+          <img
+            [src]="'UptieArt/Uptie_4_Frame_' + (targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000') + '.png'"
+            alt="Frame"
+            class="correct-id-frame"
+          />
+        </div>
+        <div class="target-details">
+          <h3>{{ targetId()!.name }}</h3>
+          <div class="target-info">
+            <span><strong>Sinner:</strong> {{ targetId()!.sinner }}</span>
+            <span><strong>Rarity:</strong> {{ targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000' }}</span>
+            <span><strong>Season:</strong> {{ targetId()!.season }}</span>
+          </div>
+        </div>
+      </div>
+    }
+    <p class="next-game">Next ID in: {{ timeUntilNextGame() }}</p>
+  </div>
+</section>

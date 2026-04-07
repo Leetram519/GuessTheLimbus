@@ -1,0 +1,30 @@
+<section class="id-selection">
+  <div class="search-container">
+    <input
+      type="text"
+      [value]="searchTerm()"
+      (input)="onSearchInput($event)"
+      placeholder="Search for an ID..."
+      class="search-input"
+      aria-label="Search IDs"
+    />
+  </div>
+
+  <div class="id-grid" role="list">
+    @for (id of filteredIds(); track id.id) {
+      <button
+        type="button"
+        class="id-card"
+        [class.used]="usedIds().includes(id.id)"
+        (click)="selectId(id)"
+        [disabled]="usedIds().includes(id.id)"
+        [attr.aria-label]="'Select ' + id.name"
+      >
+        <div class="id-card-portrait">
+          <img [src]="id.imagePath" [alt]="id.name" class="id-card-image" />
+        </div>
+        <span class="id-name">{{ id.name }}</span>
+      </button>
+    }
+  </div>
+</section>

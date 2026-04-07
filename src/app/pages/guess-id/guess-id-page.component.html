@@ -1,0 +1,36 @@
+<div class="app-container">
+  <gtl-game-header (newsClicked)="game.openNewsModal()" (bugClicked)="game.openBugReport()" />
+
+  <gtl-game-playfield [guesses]="game.guesses()" [currentGuess]="game.currentGuess()" />
+
+  @if (!game.gameOver()) {
+    <gtl-id-selection
+      [searchTerm]="game.searchTerm()"
+      [filteredIds]="game.filteredIds()"
+      [usedIds]="game.usedIds()"
+      (searchTermChanged)="game.onSearchTermChange($event)"
+      (idSelected)="game.selectId($event)"
+    />
+  }
+
+  @if (game.gameOver()) {
+    <gtl-game-result
+      [hasWon]="game.hasWon()"
+      [resultMessage]="game.resultMessage()"
+      [targetId]="game.targetId()"
+      [timeUntilNextGame]="game.timeUntilNextGame()"
+    />
+  }
+
+  <gtl-how-to-play />
+</div>
+
+<gtl-confirm-guess-modal
+  [visible]="game.showConfirmModal()"
+  [selectedId]="game.selectedId()"
+  [isSubmitting]="game.isSubmitting()"
+  (cancel)="game.cancelSelection()"
+  (confirm)="game.confirmGuess()"
+/>
+
+<gtl-news-modal [visible]="game.showNewsModal()" (close)="game.closeNewsModal()" />
