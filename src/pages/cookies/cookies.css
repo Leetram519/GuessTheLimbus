@@ -1,0 +1,78 @@
+.legal-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.hero-card,
+.policy-card,
+.policy-note {
+  background: var(--bg-medium);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+.hero-card {
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(180deg, rgba(139, 115, 85, 0.14), rgba(42, 34, 24, 0.94));
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--accent-gold);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  color: var(--text-light);
+}
+
+.intro {
+  margin-bottom: 0;
+  color: var(--text-light);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.policy-card {
+  padding: 1.25rem;
+  background: var(--bg-light);
+}
+
+.policy-card h2 {
+  margin-bottom: 0.75rem;
+  color: var(--accent-gold);
+  font-size: 1.15rem;
+}
+
+.policy-card p,
+.policy-note p {
+  margin-bottom: 0;
+  color: var(--text-light);
+  line-height: 1.65;
+}
+
+.policy-note {
+  margin-top: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: rgba(61, 52, 40, 0.72);
+}

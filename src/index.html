@@ -33,6 +33,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
   </head>
   <body>
     <app-root></app-root>
@@ -52,6 +54,7 @@
 
         window.dataLayer = window.dataLayer || [];
         function gtag(){window.dataLayer.push(arguments);}
+        window.gtag = gtag;
         gtag('js', new Date());
         gtag('config', measurementId);
       })();

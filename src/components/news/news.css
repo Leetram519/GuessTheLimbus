@@ -1,0 +1,209 @@
+
+
+.modal-content {
+  background: var(--bg-medium);
+  border: 3px solid var(--accent-gold);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background: var(--bg-light);
+  color: var(--accent-gold);
+  transform: rotate(90deg);
+}
+
+.news-modal-content {
+  max-width: 760px;
+  width: min(92vw, 760px);
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-gold) var(--bg-dark);
+}
+
+.news-modal-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.news-modal-content::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+  border-left: 1px solid var(--border-color);
+}
+
+.news-modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-gold) 0%, var(--accent-brown) 100%);
+  border-radius: 10px;
+  border: 2px solid var(--bg-dark);
+}
+
+.news-modal-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffd466 0%, var(--accent-gold) 100%);
+}
+
+.news-modal-content h2 {
+  color: var(--accent-gold);
+  margin: 0 0 1.5rem 0;
+  padding-right: 2rem;
+  font-size: 1.8rem;
+}
+
+.news-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.news-item {
+  padding: 1.5rem;
+  background: var(--bg-light);
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.news-item h3 {
+  color: var(--accent-gold);
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.news-date {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-style: italic;
+  margin: 0 0 1rem 0;
+}
+
+.news-item p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+.news-item ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.news-item li {
+  margin: 0.4rem 0;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+.contributors {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.contributor-label {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.contributor-name {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+  border: 2px solid #a0a0a0;
+  border-radius: 20px;
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.contributor-name.gold {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #2a2416 0%, #3d3428 100%);
+  border: 2px solid #FFC100;
+  border-radius: 20px;
+  color: #FFC100;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.4);
+}
+
+.contributor-name.silver {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  border: 2px solid #c0c0c0;
+  border-radius: 20px;
+  color: #c0c0c0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(192, 192, 192, 0.3);
+}
+
+.news-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--border-color);
+  text-align: center;
+}
+
+.news-footer p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.news-footer a {
+  color: var(--accent-gold);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.news-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .news-modal-content {
+    max-height: 90vh;
+    margin: 0.5rem;
+  }
+
+  .news-modal-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .news-item {
+    padding: 1rem;
+  }
+
+  .news-item h3 {
+    font-size: 1rem;
+  }
+
+  .close-btn {
+    font-size: 1.2rem;
+  }
+}
