@@ -1,0 +1,36 @@
+@if (isOpen) {
+  <div class="modal-overlay" (click)="onCancel()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirm Your Guess</h3>
+      @if (selectedId) {
+        <div class="modal-id">
+          <div class="modal-id-portrait">
+            <img [src]="selectedId.imagePath" [alt]="selectedId.name" class="modal-id-image" />
+          </div>
+          <div class="modal-id-details">
+            <span class="modal-id-name">{{ selectedId.name }}</span>
+            <div class="modal-quick-info">
+              <span>{{ selectedId.sinner }}</span>
+              <span>•</span>
+              <span>{{ selectedId.rarity === 0 ? '0' : selectedId.rarity === 1 ? '00' : '000' }}</span>
+              <span>•</span>
+              <span>{{ selectedId.season }}</span>
+            </div>
+          </div>
+        </div>
+      }
+      <p>Are you sure you want to guess this ID?</p>
+      <div class="modal-buttons">
+        <button class="btn-cancel" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+        <button class="btn-confirm" (click)="onConfirm()" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <span class="loading-spinner"></span>
+            Submitting...
+          } @else {
+            Confirm
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

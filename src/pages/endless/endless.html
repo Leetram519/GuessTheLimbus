@@ -1,0 +1,129 @@
+<div class="app-container">
+  <section class="endless-header">
+    <div>
+      <h2>Endless ID Guesser</h2>
+      <p class="subline">Clear rounds, pick a new Mounting Trial each round, and survive as long as you can.</p>
+    </div>
+  </section>
+
+  <section class="run-stats">
+    <div class="stat-card">
+      <span>Round</span>
+      <strong>{{ roundNumber() }}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Rounds Cleared</span>
+      <strong>{{ roundsCleared() }}</strong>
+    </div>
+    <div class="stat-card">
+      <span>Guesses Left</span>
+      <strong>{{ guessesLeft() }}/{{ maxGuesses() }}</strong>
+    </div>
+  </section>
+
+  <section class="trials-panel">
+    <h3>Active Mounting Trials</h3>
+    @if (trialSummary().length === 0) {
+      <p class="empty-trials">No trials active yet. You must select one after every round you continue.</p>
+    } @else {
+      <div class="trial-list">
+        @for (trial of trialSummary(); track trial.id) {
+          <div class="trial-item">
+            <div class="trial-title">{{ trial.name }} <span class="trial-stack">x{{ trial.count }}</span></div>
+            <div class="trial-desc">{{ trial.description }}</div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="playfield">
+    @for (guess of guesses(); track $index) {
+      <app-id-guess-row
+        [guess]="guess"
+        [index]="$index"
+        [isActive]="$index === currentGuess() && !gameOver()"
+      ></app-id-guess-row>
+    }
+  </section>
+
+  @if (!gameOver()) {
+    <app-id-card-grid
+      [ids]="filteredIds()"
+      [usedIds]="usedIds()"
+      [searchTerm]="searchTerm()"
+      [disabled]="gameOver()"
+      (searchTermChange)="onSearchTermChange($event)"
+      (selectId)="selectId($event)"
+    ></app-id-card-grid>
+  }
+
+  @if (gameOver()) {
+    <section class="game-result">
+      <div class="result-box" [class.victory]="roundWon()">
+        <h2>{{ roundWon() ? 'VICTORY!' : 'DEFEAT' }}</h2>
+        <p>{{ roundMessage() }}</p>
+        @if (targetId()) {
+          <div class="correct-id">
+            <div class="correct-id-portrait">
+              <img [src]="targetId()!.imagePath" [alt]="targetId()!.name" class="correct-id-image" />
+              <img
+                [src]="'UptieArt/Uptie_4_Frame_' + (targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000') + '.png'"
+                alt="Frame"
+                class="correct-id-frame"
+              />
+            </div>
+            <div class="target-details">
+              <h3>{{ targetId()!.name }}</h3>
+              <div class="target-info">
+                <span><strong>Sinner:</strong> {{ targetId()!.sinner }}</span>
+                <span><strong>Rarity:</strong> {{ targetId()!.rarity === 0 ? '0' : targetId()!.rarity === 1 ? '00' : '000' }}</span>
+                <span><strong>Season:</strong> {{ targetId()!.season }}</span>
+              </div>
+            </div>
+          </div>
+        }
+        <p class="round-info">Current round: {{ roundNumber() }} | Rounds cleared: {{ roundsCleared() }}</p>
+
+        @if (!showTrialSelection()) {
+          <div class="result-actions">
+            <button class="btn-end" (click)="endSession()">End Session</button>
+            <button class="btn-continue" (click)="continueToTrialSelection()">Continue</button>
+          </div>
+        } @else {
+          <div class="trial-picker">
+            <h4>Select your next Mounting Trial</h4>
+            <div class="trial-pick-grid">
+              @for (trial of trialCatalog; track trial.id) {
+                <button
+                  class="trial-pick"
+                  [class.selected]="selectedTrial() === trial.id"
+                  [disabled]="!canPickTrial(trial.id)"
+                  (click)="pickTrial(trial.id)">
+                  <div class="pick-title">{{ trial.name }}</div>
+                  <div class="pick-desc">{{ trial.description }}</div>
+                  @if (!trial.stackable && getTrialCount(trial.id) > 0) {
+                    <div class="pick-lock">Already active</div>
+                  }
+                </button>
+              }
+            </div>
+            <button class="btn-continue full" [disabled]="!selectedTrial()" (click)="applyTrialAndContinue()">Start Next Round</button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <div class="global-ad-slot">
+    <app-ad-placeholder [height]="80"></app-ad-placeholder>
+  </div>
+</div>
+
+<app-confirm-guess-modal
+  [isOpen]="showConfirmModal()"
+  [selectedId]="selectedId()"
+  [isSubmitting]="isSubmitting()"
+  (cancel)="cancelSelection()"
+  (confirm)="confirmGuess()"
+></app-confirm-guess-modal>

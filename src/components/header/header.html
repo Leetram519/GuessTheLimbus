@@ -1,6 +1,12 @@
 <header class="game-header">
 <div class="header-left">
-    <a href="/idguess" class="mode-tag">ID Guesser</a>
+    <div class="mode-menu">
+        <a routerLink="/idguess" class="mode-tag">ID Guesser</a>
+        <div class="mode-dropdown" role="menu" aria-label="ID Guesser Modes">
+            <a routerLink="/idguess" class="mode-option" role="menuitem">Daily</a>
+            <a routerLink="/endless" class="mode-option" role="menuitem">Endless</a>
+        </div>
+    </div>
 </div>
 
 <div class="header-brand">

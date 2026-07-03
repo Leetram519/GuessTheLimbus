@@ -1,0 +1,136 @@
+.summary-shell {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.summary-card {
+  background: var(--bg-medium);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.3rem;
+}
+
+.summary-card h2 {
+  margin: 0;
+  color: var(--accent-gold);
+}
+
+.subtitle {
+  margin-top: 0.4rem;
+  color: var(--text-dim);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.metric {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metric span {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.metric strong {
+  color: var(--text-light);
+}
+
+.trials {
+  margin-top: 1rem;
+}
+
+.trials h3 {
+  margin: 0 0 0.5rem;
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-dim);
+}
+
+.trial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+.trial-item {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.6rem;
+}
+
+.trial-name {
+  font-weight: 700;
+}
+
+.trial-name span {
+  color: var(--accent-gold);
+}
+
+.trial-desc {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+}
+
+.share-actions,
+.navigation-actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+button {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  background: var(--bg-dark);
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+button.primary {
+  background: rgba(76, 175, 80, 0.25);
+  border-color: var(--correct);
+}
+
+button.secondary {
+  background: rgba(255, 107, 107, 0.15);
+}
+
+.feedback {
+  margin-top: 0.6rem;
+}
+
+.feedback.success {
+  color: #9fe2a2;
+}
+
+.feedback.error {
+  color: #ff9d9d;
+}
+
+@media (max-width: 768px) {
+  .summary-shell {
+    padding: 1rem;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}

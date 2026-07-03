@@ -1,0 +1,66 @@
+<div class="summary-shell">
+  @if (summary()) {
+    <section class="summary-card">
+      <h2>Endless Run Results</h2>
+      <p class="subtitle">Share your achievement and dive back in.</p>
+
+      <div class="metrics">
+        <div class="metric">
+          <span>Rounds Cleared</span>
+          <strong>{{ summary()!.roundsCleared }}</strong>
+        </div>
+        <div class="metric">
+          <span>Rounds Played</span>
+          <strong>{{ summary()!.totalRoundsPlayed }}</strong>
+        </div>
+        <div class="metric">
+          <span>Ended At</span>
+          <strong>{{ summary()!.endedAt | date:'medium' }}</strong>
+        </div>
+      </div>
+
+      <div class="trials">
+        <h3>Active Mounting Trials</h3>
+        @if (summary()!.activeTrials.length === 0) {
+          <p class="empty">No trials were active.</p>
+        } @else {
+          <div class="trial-grid">
+            @for (trial of summary()!.activeTrials; track trial.id) {
+              <div class="trial-item">
+                <div class="trial-name">{{ trial.name }} <span>x{{ trial.count }}</span></div>
+                <div class="trial-desc">{{ trial.description }}</div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="share-actions">
+        <button (click)="copyShareText()">Copy Achievement</button>
+        <button (click)="nativeShare()">Native Share</button>
+        <button (click)="shareToX()">Share on X</button>
+      </div>
+
+      @if (copied()) {
+        <p class="feedback success">Achievement copied to clipboard.</p>
+      }
+      @if (shareError()) {
+        <p class="feedback error">{{ shareError() }}</p>
+      }
+
+      <div class="navigation-actions">
+        <button class="primary" (click)="playAgain()">Play Endless Again</button>
+        <button class="secondary" (click)="goToDaily()">Back to Daily</button>
+      </div>
+    </section>
+  } @else {
+    <section class="summary-card">
+      <h2>No Endless Summary Found</h2>
+      <p>Your latest endless run summary is not available yet.</p>
+      <div class="navigation-actions">
+        <button class="primary" (click)="playAgain()">Start Endless Mode</button>
+        <button class="secondary" (click)="goToDaily()">Back to Daily</button>
+      </div>
+    </section>
+  }
+</div>

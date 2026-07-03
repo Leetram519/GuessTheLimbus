@@ -1,11 +1,13 @@
 import { isPlatformBrowser } from "@angular/common";
 import { Component, Inject, Output, PLATFORM_ID } from "@angular/core";
 import { EventEmitter } from "@angular/core";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
+    imports: [RouterLink],
 })
 export class Header {
     private readonly isBrowser: boolean;

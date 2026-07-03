@@ -56,6 +56,10 @@ export interface DailyIdResponse {
   msUntilReset: number;
 }
 
+export interface RandomIdResponse {
+  id: number;
+}
+
 export interface VerifyGuessResponse {
   correct: boolean;
   guessedId: LimbusId;
@@ -66,7 +70,7 @@ export interface VerifyGuessResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://guessthelimbus.com/api';
+  private apiUrl = 'http://localhost:4000/api';
 
   async getAllIds(): Promise<LimbusId[]> {
     try {
@@ -111,6 +115,20 @@ export class ApiService {
       return await response.json();
     } catch (error) {
       console.error('Error verifying guess:', error);
+      return null;
+    }
+  }
+
+  async getRandomId(excludeId?: number): Promise<RandomIdResponse | null> {
+    try {
+      const query = Number.isInteger(excludeId) ? `?excludeId=${excludeId}` : '';
+      const response = await fetch(`${this.apiUrl}/random-id${query}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch random ID');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching random ID:', error);
       return null;
     }
   }

@@ -4,11 +4,21 @@ import { NotFoundPage } from '../pages/notfound/notfound';
 import { PrivacyPolicyPage } from '../pages/privacy/privacy';
 import { TermsOfServicePage } from '../pages/terms/terms';
 import { CookiePolicyPage } from '../pages/cookies/cookies';
+import { EndlessGuessPage } from '../pages/endless/endless';
+import { EndlessSummaryPage } from '../pages/endless-summary/endless-summary';
 
 export const routes: Routes = [
     {
         component: IdGuessPage,
         path: "idguess"
+    },
+    {
+        component: EndlessGuessPage,
+        path: "endless"
+    },
+    {
+        component: EndlessSummaryPage,
+        path: "endless-summary"
     },
     {
         component: PrivacyPolicyPage,

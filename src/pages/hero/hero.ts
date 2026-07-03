@@ -1,9 +1,13 @@
 import { Component, OnInit, signal, computed, ChangeDetectionStrategy, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiService, LimbusId, GuessComparison, SkillVariation } from '../../services/api.service';
+import { ApiService, LimbusId, GuessComparison } from '../../services/api.service';
 import { AnalyticsParams, AnalyticsService, PlayerType } from '../../services/analytics.service';
 import { AdPlaceholder } from '../../components/ad-placeholder/ad-placeholder';
+import { IdGuessRowComponent } from '../../components/id-guess-row/id-guess-row';
+import { IdCardGridComponent } from '../../components/id-card-grid/id-card-grid';
+import { HowToPlayComponent } from '../../components/how-to-play/how-to-play';
+import { ConfirmGuessModalComponent } from '../../components/confirm-guess-modal/confirm-guess-modal';
 
 interface GuessResult {
   id: LimbusId;
@@ -16,7 +20,13 @@ interface GuessResult {
   templateUrl: './hero.html',
   styleUrls: ['./hero.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AdPlaceholder]
+  imports: [
+    AdPlaceholder,
+    IdGuessRowComponent,
+    IdCardGridComponent,
+    HowToPlayComponent,
+    ConfirmGuessModalComponent
+  ]
 })
 export class IdGuessPage implements OnInit {
   private readonly isBrowser: boolean;
@@ -47,11 +57,6 @@ export class IdGuessPage implements OnInit {
   protected readonly serverResetTime = signal(0);
   protected readonly usedIds = signal<number[]>([]);
   
-  protected readonly tooltipText = signal('');
-  protected readonly tooltipVisible = signal(false);
-  protected readonly tooltipX = signal(0);
-  protected readonly tooltipY = signal(0);
-  
   protected readonly showNewsModal = signal(false);
   protected readonly isSubmitting = signal(false);
 
@@ -63,27 +68,12 @@ export class IdGuessPage implements OnInit {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  showTooltip(event: MouseEvent, text: string) {
-    this.tooltipText.set(text);
-    this.tooltipVisible.set(true);
-    this.updateTooltipPosition(event);
-  }
-
-  hideTooltip() {
-    this.tooltipVisible.set(false);
-  }
-
   openNewsModal() {
     this.showNewsModal.set(true);
   }
 
   closeNewsModal() {
     this.showNewsModal.set(false);
-  }
-
-  updateTooltipPosition(event: MouseEvent) {
-    this.tooltipX.set(event.clientX + 15);
-    this.tooltipY.set(event.clientY + 15);
   }
 
   async ngOnInit() {
@@ -355,36 +345,6 @@ export class IdGuessPage implements OnInit {
   onSearchTermChange(value: string) {
     this.searchTerm.set(value);
     this.filterIds();
-  }
-
-  // Helper methods for quick preview
-  areAllKeywordsMatched(keywords: { keyword: string; match: "YES" | "NO" }[]): boolean {
-    return keywords.every(kw => kw.match === 'YES');
-  }
-
-  areSomeKeywordsMatched(keywords: { keyword: string; match: "YES" | "NO" }[]): boolean {
-    return keywords.some(kw => kw.match === 'YES');
-  }
-
-  isSkillFullyMatched(skill: { exists: "YES" | "NO"; variations: any[] }): boolean {
-    return skill.exists === 'YES' && skill.variations.every(v => 
-      v.sinAffinity === 'YES' && v.coinCount === 'YES' && v.finalPower === 'YES'
-    );
-  }
-
-  isSkillPartiallyMatched(skill: { exists: "YES" | "NO"; variations: any[] }): boolean {
-    return skill.exists === 'YES' && skill.variations.some(v => 
-      v.sinAffinity === 'YES' || v.coinCount === 'YES' || v.finalPower === 'YES'
-    );
-  }
-
-  getSkillVariation(id: LimbusId, skillNumber: number, variationNumber: number): SkillVariation | null {
-    const skill = id.skills.find(s => s.skillNumber === skillNumber);
-    if (!skill) {
-      return null;
-    }
-
-    return skill.variations.find(v => v.variationNumber === variationNumber) ?? null;
   }
 
   private initializeAnalyticsContext() {

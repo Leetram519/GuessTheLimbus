@@ -1,0 +1,26 @@
+<section class="id-selection">
+  <div class="search-container">
+    <input 
+      type="text" 
+      [value]="searchTerm"
+      (input)="onSearchChange($any($event.target).value)"
+      placeholder="Search for an ID..."
+      class="search-input"
+    />
+  </div>
+
+  <div class="id-grid">
+    @for (id of ids; track id.id) {
+      <div 
+        class="id-card" 
+        [class.used]="usedIds.includes(id.id)"
+        (click)="onSelect(id)"
+      >
+        <div class="id-card-portrait">
+          <img [src]="id.imagePath" [alt]="id.name" class="id-card-image" />
+        </div>
+        <span class="id-name">{{ id.name }}</span>
+      </div>
+    }
+  </div>
+</section>
